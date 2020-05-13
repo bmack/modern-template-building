@@ -2,6 +2,7 @@
 	"name": "bmack/modern-template-building",
 	"description": "A homage to the old-style marker-based templating of TYPO3. Includes TEMPLATE and FILE cObjects.",
 	"type": "typo3-cms-extension",
+	"license": "GPL-2.0-or-later",
 	"require": {
 		"typo3/cms-core": "^9.5 || ^10.0 || ^11.0",
 		"typo3/cms-frontend": "^9.5 || ^10.0 || ^11.0"
