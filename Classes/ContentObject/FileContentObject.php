@@ -52,11 +52,11 @@ class FileContentObject extends AbstractContentObject
         } catch (\TYPO3\CMS\Core\Resource\Exception $e) {
             // do nothing
         }
-        $linkWrap = isset($conf['linkWrap.']) ? $this->cObj->stdWrap($conf['linkWrap'], $conf['linkWrap.']) : $conf['linkWrap'];
+        $linkWrap = isset($conf['linkWrap.']) ? $this->cObj->stdWrap($conf['linkWrap'], $conf['linkWrap.']) : (isset($conf['linkWrap']) ? $conf['linkWrap'] : '');
         if ($linkWrap) {
             $theValue = $this->cObj->linkWrap($theValue, $linkWrap);
         }
-        $wrap = isset($conf['wrap.']) ? $this->cObj->stdWrap($conf['wrap'], $conf['wrap.']) : $conf['wrap'];
+        $wrap = isset($conf['wrap.']) ? $this->cObj->stdWrap($conf['wrap'], $conf['wrap.']) : (isset($conf['wrap']) ? $conf['wrap'] : '');
         if ($wrap) {
             $theValue = $this->cObj->wrap($theValue, $wrap);
         }
