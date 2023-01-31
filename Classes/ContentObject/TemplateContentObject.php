@@ -31,8 +31,6 @@ class TemplateContentObject extends AbstractContentObject
 
     /**
      * Default constructor, which also instantiates the MarkerBasedTemplateService.
-     *
-     * @param ContentObjectRenderer $cObj
      */
     public function __construct(ContentObjectRenderer $cObj)
     {
@@ -52,7 +50,7 @@ class TemplateContentObject extends AbstractContentObject
         $subparts = [];
         $marks = [];
         $wraps = [];
-        $markerWrap = isset($conf['markerWrap.']) ? $this->cObj->stdWrap($conf['markerWrap'], $conf['markerWrap.']) : $conf['markerWrap'];
+        $markerWrap = isset($conf['markerWrap.']) ? $this->cObj->stdWrap($conf['markerWrap'], $conf['markerWrap.']) : (isset($conf['markerWrap']) ? $conf['markerWrap'] : '');
         if (!$markerWrap) {
             $markerWrap = '### | ###';
         }
@@ -66,18 +64,21 @@ class TemplateContentObject extends AbstractContentObject
             $content = $this->templateService->getSubpart($content, $PRE . $workOnSubpart . $POST);
         }
         // Fixing all relative paths found:
-        if ($conf['relPathPrefix']) {
+        if (!empty($conf['relPathPrefix'])) {
             $htmlParser = GeneralUtility::makeInstance(HtmlParser::class);
             $content = $htmlParser->prefixResourcePath($conf['relPathPrefix'], $content, $conf['relPathPrefix.']);
         }
         if ($content) {
+            if (!isset($conf['nonCachedSubst'])) {
+                $conf['nonCachedSubst'] = '';
+            }
             $nonCachedSubst = isset($conf['nonCachedSubst.']) ? $this->cObj->stdWrap($conf['nonCachedSubst'], $conf['nonCachedSubst.']) : $conf['nonCachedSubst'];
             // NON-CACHED:
             if ($nonCachedSubst) {
                 // Getting marks
                 if (is_array($conf['marks.'])) {
                     foreach ($conf['marks.'] as $theKey => $theValue) {
-                        if (strpos($theKey, '.') === false) {
+                        if (!str_contains($theKey, '.')) {
                             $content = str_replace($PRE . $theKey . $POST, $this->cObj->cObjGetSingle($theValue, $conf['marks.'][$theKey . '.'], 'marks.' . $theKey), $content);
                         }
                     }
@@ -85,7 +86,7 @@ class TemplateContentObject extends AbstractContentObject
                 // Getting subparts.
                 if (is_array($conf['subparts.'])) {
                     foreach ($conf['subparts.'] as $theKey => $theValue) {
-                        if (strpos($theKey, '.') === false) {
+                        if (!str_contains($theKey, '.')) {
                             $subpart = $this->templateService->getSubpart($content, $PRE . $theKey . $POST);
                             if ($subpart) {
                                 $this->cObj->setCurrentVal($subpart);
@@ -97,7 +98,7 @@ class TemplateContentObject extends AbstractContentObject
                 // Getting subpart wraps
                 if (is_array($conf['wraps.'])) {
                     foreach ($conf['wraps.'] as $theKey => $theValue) {
-                        if (strpos($theKey, '.') === false) {
+                        if (!str_contains($theKey, '.')) {
                             $subpart = $this->templateService->getSubpart($content, $PRE . $theKey . $POST);
                             if ($subpart) {
                                 $this->cObj->setCurrentVal($subpart);
@@ -109,9 +110,9 @@ class TemplateContentObject extends AbstractContentObject
             } else {
                 // CACHED
                 // Getting subparts.
-                if (is_array($conf['subparts.'])) {
+                if (isset($conf['subparts.']) && is_array($conf['subparts.'])) {
                     foreach ($conf['subparts.'] as $theKey => $theValue) {
-                        if (strpos($theKey, '.') === false) {
+                        if (!str_contains($theKey, '.')) {
                             $subpart = $this->templateService->getSubpart($content, $PRE . $theKey . $POST);
                             if ($subpart) {
                                 $this->getTypoScriptFrontendController()->register['SUBPART_' . $theKey] = $subpart;
@@ -124,16 +125,16 @@ class TemplateContentObject extends AbstractContentObject
                 // Getting marks
                 if (is_array($conf['marks.'])) {
                     foreach ($conf['marks.'] as $theKey => $theValue) {
-                        if (strpos($theKey, '.') === false) {
+                        if (!str_contains($theKey, '.')) {
                             $marks[$theKey]['name'] = $theValue;
                             $marks[$theKey]['conf'] = $conf['marks.'][$theKey . '.'];
                         }
                     }
                 }
                 // Getting subpart wraps
-                if (is_array($conf['wraps.'])) {
+                if (isset($conf['wraps.']) && is_array($conf['wraps.'])) {
                     foreach ($conf['wraps.'] as $theKey => $theValue) {
-                        if (strpos($theKey, '.') === false) {
+                        if (!str_contains($theKey, '.')) {
                             $wraps[$theKey]['name'] = $theValue;
                             $wraps[$theKey]['conf'] = $conf['wraps.'][$theKey . '.'];
                         }
@@ -160,6 +161,9 @@ class TemplateContentObject extends AbstractContentObject
                     $subpartWraps[$PRE . $theKey . $POST] = explode('|', $this->cObj->cObjGetSingle($theValue['name'], $theValue['conf'], 'wraps.' . $theKey));
                 }
                 // Substitution
+                if (!isset($conf['substMarksSeparately'])) {
+                    $conf['substMarksSeparately'] = '';
+                }
                 $substMarksSeparately = isset($conf['substMarksSeparately.']) ? $this->cObj->stdWrap($conf['substMarksSeparately'], $conf['substMarksSeparately.']) : $conf['substMarksSeparately'];
                 if ($substMarksSeparately) {
                     $content = $this->templateService->substituteMarkerArrayCached($content, [], $subpartArray, $subpartWraps);
