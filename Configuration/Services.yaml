@@ -1,0 +1,17 @@
+services:
+
+  Bmack\ModernTemplateBuilding\:
+    resource: '../Classes/*'
+
+  # Register all available content objects
+  Bmack\ModernTemplateBuilding\ContentObject\FileContentObject:
+    tags:
+      - name: frontend.contentobject
+        identifier: 'FILE'
+
+  Bmack\ModernTemplateBuilding\ContentObject\TemplateContentObject:
+    tags:
+      - name: frontend.contentobject
+        identifier: 'TEMPLATE'
+
+

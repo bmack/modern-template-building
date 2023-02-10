@@ -25,20 +25,6 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 class TemplateContentObject extends AbstractContentObject
 {
     /**
-     * @var MarkerBasedTemplateService
-     */
-    protected $templateService;
-
-    /**
-     * Default constructor, which also instantiates the MarkerBasedTemplateService.
-     */
-    public function __construct(ContentObjectRenderer $cObj)
-    {
-        $this->templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
-        parent::__construct($cObj);
-    }
-
-    /**
      * Rendering the cObject, TEMPLATE
      *
      * @param array $conf Array of TypoScript properties
@@ -47,6 +33,7 @@ class TemplateContentObject extends AbstractContentObject
      */
     public function render($conf = [])
     {
+        $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         $subparts = [];
         $marks = [];
         $wraps = [];
@@ -61,7 +48,7 @@ class TemplateContentObject extends AbstractContentObject
         $content = $this->cObj->cObjGetSingle($conf['template'], $conf['template.'], 'template');
         $workOnSubpart = isset($conf['workOnSubpart.']) ? $this->cObj->stdWrap($conf['workOnSubpart'], $conf['workOnSubpart.']) : $conf['workOnSubpart'];
         if ($workOnSubpart) {
-            $content = $this->templateService->getSubpart($content, $PRE . $workOnSubpart . $POST);
+            $content = $templateService->getSubpart($content, $PRE . $workOnSubpart . $POST);
         }
         // Fixing all relative paths found:
         if (!empty($conf['relPathPrefix'])) {
@@ -87,10 +74,10 @@ class TemplateContentObject extends AbstractContentObject
                 if (is_array($conf['subparts.'])) {
                     foreach ($conf['subparts.'] as $theKey => $theValue) {
                         if (!str_contains($theKey, '.')) {
-                            $subpart = $this->templateService->getSubpart($content, $PRE . $theKey . $POST);
+                            $subpart = $templateService->getSubpart($content, $PRE . $theKey . $POST);
                             if ($subpart) {
                                 $this->cObj->setCurrentVal($subpart);
-                                $content = $this->templateService->substituteSubpart($content, $PRE . $theKey . $POST, $this->cObj->cObjGetSingle($theValue, $conf['subparts.'][$theKey . '.'], 'subparts.' . $theKey), true);
+                                $content = $templateService->substituteSubpart($content, $PRE . $theKey . $POST, $this->cObj->cObjGetSingle($theValue, $conf['subparts.'][$theKey . '.'], 'subparts.' . $theKey), true);
                             }
                         }
                     }
@@ -99,10 +86,10 @@ class TemplateContentObject extends AbstractContentObject
                 if (is_array($conf['wraps.'])) {
                     foreach ($conf['wraps.'] as $theKey => $theValue) {
                         if (!str_contains($theKey, '.')) {
-                            $subpart = $this->templateService->getSubpart($content, $PRE . $theKey . $POST);
+                            $subpart = $templateService->getSubpart($content, $PRE . $theKey . $POST);
                             if ($subpart) {
                                 $this->cObj->setCurrentVal($subpart);
-                                $content = $this->templateService->substituteSubpart($content, $PRE . $theKey . $POST, explode('|', $this->cObj->cObjGetSingle($theValue, $conf['wraps.'][$theKey . '.'], 'wraps.' . $theKey)), true);
+                                $content = $templateService->substituteSubpart($content, $PRE . $theKey . $POST, explode('|', $this->cObj->cObjGetSingle($theValue, $conf['wraps.'][$theKey . '.'], 'wraps.' . $theKey)), true);
                             }
                         }
                     }
@@ -113,7 +100,7 @@ class TemplateContentObject extends AbstractContentObject
                 if (isset($conf['subparts.']) && is_array($conf['subparts.'])) {
                     foreach ($conf['subparts.'] as $theKey => $theValue) {
                         if (!str_contains($theKey, '.')) {
-                            $subpart = $this->templateService->getSubpart($content, $PRE . $theKey . $POST);
+                            $subpart = $templateService->getSubpart($content, $PRE . $theKey . $POST);
                             if ($subpart) {
                                 $this->getTypoScriptFrontendController()->register['SUBPART_' . $theKey] = $subpart;
                                 $subparts[$theKey]['name'] = $theValue;
@@ -166,10 +153,10 @@ class TemplateContentObject extends AbstractContentObject
                 }
                 $substMarksSeparately = isset($conf['substMarksSeparately.']) ? $this->cObj->stdWrap($conf['substMarksSeparately'], $conf['substMarksSeparately.']) : $conf['substMarksSeparately'];
                 if ($substMarksSeparately) {
-                    $content = $this->templateService->substituteMarkerArrayCached($content, [], $subpartArray, $subpartWraps);
-                    $content = $this->templateService->substituteMarkerArray($content, $markerArray);
+                    $content = $templateService->substituteMarkerArrayCached($content, [], $subpartArray, $subpartWraps);
+                    $content = $templateService->substituteMarkerArray($content, $markerArray);
                 } else {
-                    $content = $this->templateService->substituteMarkerArrayCached($content, $markerArray, $subpartArray, $subpartWraps);
+                    $content = $templateService->substituteMarkerArrayCached($content, $markerArray, $subpartArray, $subpartWraps);
                 }
             }
         }
@@ -182,7 +169,7 @@ class TemplateContentObject extends AbstractContentObject
     /**
      * @return TypoScriptFrontendController
      */
-    protected function getTypoScriptFrontendController(): ?TypoScriptFrontendController
+    protected function getTypoScriptFrontendController(): TypoScriptFrontendController
     {
         return $GLOBALS['TSFE'];
     }
