@@ -13,7 +13,7 @@ with two "Content Objects" - `TEMPLATE` and `FILE` to use them in future TYPO3
 versions.
 
 This extension is a perfect example how templates that were created with this
-approach 15 years ago, still run on TYPO3 v9, v10 or later without having to adopt
+approach 20 years ago, still run on TYPO3 v9, v10 or later without having to adopt
 anything. TYPO3 is loved for its
 * backwards-compatibility,
 * upgrade path and
@@ -31,7 +31,7 @@ in your custom TypoScript code.
 
 ## Configuration
 
-This is taken from the original TYPO3 documentation and was slightly adapted for this extension.
+This is taken from the original TYPO3 documentation and it has been slightly adapted for this extension.
 
 ### TEMPLATE Content Object
 
@@ -317,5 +317,6 @@ If you find an issue, feel free to create an issue on GitHub or a pull request.
 
 ## Credits
 
-This extension was created by [Benni Mack](https://github.com/bmack) in 2020, the original credits go to the TYPO3
-development team and contributors that have maintained this code for over 20 years until it was removed from Core.
+This extension was created by [Benni Mack](https://github.com/bmack) in 2020.
+The original credits go to the TYPO3 development team and contributors 
+that have maintained this code for over 20 years until it was removed from Core.
