@@ -37,7 +37,9 @@ class TemplateContentObject extends AbstractContentObject
         $subparts = [];
         $marks = [];
         $wraps = [];
-        $markerWrap = isset($conf['markerWrap.']) ? $this->cObj->stdWrap($conf['markerWrap'], $conf['markerWrap.']) : (isset($conf['markerWrap']) ? $conf['markerWrap'] : '');
+        $markerWrap = isset($conf['markerWrap']) ? (isset($conf['markerWrap.']) ? $this->cObj->stdWrap($conf['markerWrap'], $conf['markerWrap.']) : $conf['markerWrap']) : '';
+
+        $markerWrap = : (;
         if (!$markerWrap) {
             $markerWrap = '### | ###';
         }
