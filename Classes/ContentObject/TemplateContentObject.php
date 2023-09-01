@@ -68,7 +68,7 @@ class TemplateContentObject extends AbstractContentObject
                 if (is_array($conf['marks.'])) {
                     foreach ($conf['marks.'] as $theKey => $theValue) {
                         if (!str_contains($theKey, '.')) {
-                            $content = str_replace($PRE . $theKey . $POST, $this->cObj->cObjGetSingle($theValue, $conf['marks.'][$theKey . '.'], 'marks.' . $theKey), $content);
+                            $content = str_replace($PRE . $theKey . $POST, $this->cObj->cObjGetSingle($theValue, $conf['marks.'][$theKey . '.'] ?? [], 'marks.' . $theKey), $content);
                         }
                     }
                 }
