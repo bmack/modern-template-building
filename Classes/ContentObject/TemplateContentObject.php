@@ -79,7 +79,7 @@ class TemplateContentObject extends AbstractContentObject
                             $subpart = $templateService->getSubpart($content, $PRE . $theKey . $POST);
                             if ($subpart) {
                                 $this->cObj->setCurrentVal($subpart);
-                                $content = $templateService->substituteSubpart($content, $PRE . $theKey . $POST, $this->cObj->cObjGetSingle($theValue, $conf['subparts.'][$theKey . '.'], 'subparts.' . $theKey), true);
+                                $content = $templateService->substituteSubpart($content, $PRE . $theKey . $POST, $this->cObj->cObjGetSingle($theValue, $conf['subparts.'][$theKey . '.'] ?? [], 'subparts.' . $theKey), true);
                             }
                         }
                     }
