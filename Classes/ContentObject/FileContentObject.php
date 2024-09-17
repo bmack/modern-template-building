@@ -34,7 +34,10 @@ class FileContentObject extends AbstractContentObject
         $theValue = '';
         $file = isset($conf['file.']) ? $this->cObj->stdWrap($conf['file'], $conf['file.']) : $conf['file'];
         try {
-            $file = GeneralUtility::makeInstance(FilePathSanitizer::class)->sanitize($file);
+            $file = GeneralUtility::makeInstance(FilePathSanitizer::class)->sanitize($file, true);
+            if (str_starts_with($file, 'EXT:')) {
+                $file = GeneralUtility::getFileAbsFileName($file);
+            }
             if (file_exists($file)) {
                 $fileInfo = GeneralUtility::split_fileref($file);
                 $extension = $fileInfo['fileext'];
