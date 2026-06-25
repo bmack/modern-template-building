@@ -4,12 +4,16 @@
 	"type": "typo3-cms-extension",
 	"license": "GPL-2.0-or-later",
 	"require": {
-		"typo3/cms-core": "^12.0 || ^13.0",
-		"typo3/cms-frontend": "^12.0 || ^13.0"
+		"typo3/cms-core": "^12.0 || ^13.0 || ^14.0",
+		"typo3/cms-frontend": "^12.0 || ^13.0 || ^14.0"
 	},
 	"extra": {
 		"typo3/cms": {
-			"extension-key": "modern_template_building"
+			"extension-key": "modern_template_building",
+			"version": "1.1.5",
+            "Package": {
+				"providesPackages": {}
+            }
 		}
 	},
 	"autoload": {
